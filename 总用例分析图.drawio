@@ -1,0 +1,111 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="Merged-System-Overall-Use-Case" name="Overall Use Case">
+    <mxGraphModel dx="738" dy="500" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="boundary" parent="1" style="swimlane;whiteSpace=wrap;html=1;fontStyle=0;startSize=23;fillColor=none;strokeColor=#000000;gradientColor=none;" value="个人健康管理系统" vertex="1">
+          <mxGeometry height="750" width="670" x="250" y="50" as="geometry">
+            <mxRectangle height="26" width="131" x="250" y="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="uc_home" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="首页可视化" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_info" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="健康资讯" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_msg" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="消息" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_per_info" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="个人信息" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="190" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_cal" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="热量打卡记录" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="240" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_model" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="健康模型" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_mod_rec" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="模型记录" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="340" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_usr_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="用户管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="390" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_tag_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="标签管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="440" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_hlth_rec_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="健康记录管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="490" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_comm_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="评论管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="540" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_msg_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="消息管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="590" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_mod_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="健康模型管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="640" as="geometry" />
+        </mxCell>
+        <mxCell id="uc_info_mgt" parent="boundary" style="ellipse;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#000000;shadow=1;shadowColor=#CCCCCC;" value="健康资讯管理" vertex="1">
+          <mxGeometry height="30" width="100" x="285" y="690" as="geometry" />
+        </mxCell>
+        <mxCell id="user_actor" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=0;" value="用户" vertex="1">
+          <mxGeometry height="60" width="30" x="100" y="300" as="geometry" />
+        </mxCell>
+        <mxCell id="admin_actor" parent="1" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;fontStyle=0;" value="管理员" vertex="1">
+          <mxGeometry height="60" width="30" x="1030" y="500" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_home" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_home">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_info" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_info">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_msg" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_msg">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_per_info" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_per_info">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_cal" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_cal">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_model" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_model">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_u_mod_rec" edge="1" parent="1" source="user_actor" style="endArrow=none;html=1;rounded=0;exitX=1;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" target="uc_mod_rec">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_home" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_home">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_usr_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_usr_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_tag_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_tag_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_hlth_rec_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_hlth_rec_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_comm_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_comm_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_msg_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_msg_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_mod_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_mod_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="con_a_info_mgt" edge="1" parent="1" source="admin_actor" style="endArrow=none;html=1;rounded=0;exitX=0;exitY=0.3333333333333333;exitDx=0;exitDy=0;exitPerimeter=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;" target="uc_info_mgt">
+          <mxGeometry height="50" relative="1" width="50" as="geometry" />
+        </mxCell>
+        <mxCell id="figure_label" parent="1" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontStyle=1" value="图 3.1 个人健康管理系统总用例图" vertex="1">
+          <mxGeometry height="30" width="370" x="400" y="820" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
