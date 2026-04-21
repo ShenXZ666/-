@@ -1,0 +1,104 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点黑白化
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction AI健康档案分析与模型管理时序图
+
+' 定义参与者
+participant "用户/管理员" as Client
+participant "Controller层" as Controller
+participant "健康模型/记录Service" as Service
+participant "分析工具类" as Tools
+participant "Mapper层" as Mapper
+participant "数据库" as DB
+
+' ================= 业务流程 =================
+
+' --- 1. AI分析趋势报告生成流程 ---
+Client -> Controller: 发起AI趋势分析请求 (按天数统计)
+activate Controller
+    Controller -> Service: 执行数据统计分析逻辑
+    activate Service
+        Service -> Mapper: 检索指定周期内的健康记录数据
+        activate Mapper
+            Mapper -> DB: 执行统计与筛选SQL
+            activate DB
+            DB --> Mapper: 返回原始健康数据结果
+            deactivate DB
+            Mapper --> Service: 传递数据列表
+        deactivate Mapper
+
+        Service -> Tools: 执行日期范围聚合与趋势计算
+        activate Tools
+        Tools --> Service: 返回可视化趋势数据
+        deactivate Tools
+    Service --> Controller: 返回分析趋势报告数据
+    deactivate Service
+Controller --> Client: 展现AI健康趋势分析图表
+deactivate Controller
+
+' --- 2. 健康模型管理流程 (新增/修改/导入) ---
+Client -> Controller: 维护健康模型配置 (新增/修改/导入)
+activate Controller
+    Controller -> Service: 执行模型配置持久化逻辑
+    activate Service
+
+        ' 抽象处理：涵盖Excel解析、重复校验与保存
+        Service -> Tools: 校验模型参数或解析导入文件
+        activate Tools
+        Tools --> Service: 返回合规的模型配置实体
+        deactivate Tools
+
+        Service -> Mapper: 执行数据库写入/更新方法
+        activate Mapper
+            Mapper -> DB: 执行具体SQL操作 (插入/更新/批量保存)
+            activate DB
+            DB --> Mapper: 返回操作执行状态
+            deactivate DB
+            Mapper --> Service: 传递处理结果
+        deactivate Mapper
+
+    Service --> Controller: 反馈模型配置处理成功
+    deactivate Service
+Controller --> Client: 提示配置已生效
+deactivate Controller
+
+' --- 3. 模型查询与清理 ---
+Client -> Controller: 查询模型列表或删除指定配置
+activate Controller
+    Controller -> Service: 执行数据检索或清理请求
+    activate Service
+        Service -> Mapper: 调用通用数据访问接口
+        activate Mapper
+            Mapper -> DB: 检索列表数据或执行物理删除
+            activate DB
+            DB --> Mapper: 返回查询结果集或影响行数
+            deactivate DB
+            Mapper --> Service: 传递业务执行结果
+        deactivate Mapper
+    Service --> Controller: 返回管理反馈数据
+    deactivate Service
+Controller --> Client: 展现模型列表或提示操作反馈
+deactivate Controller
+
+@enduml
