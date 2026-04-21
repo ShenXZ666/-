@@ -1,0 +1,81 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点全中文命名
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 统计分析与数据可视化时序图
+
+' 定义参与者
+participant "用户/管理员" as 访问者
+participant "接口控制层" as 控制层
+participant "统计分析业务层" as 业务层
+participant "数据处理工具" as 工具类
+participant "数据持久层" as 持久层
+participant "数据库" as 数据库
+
+' ================= 业务流程 (总步数控制在28步以内) =================
+
+' --- 1. 个人数据可视化与趋势分析流程 (基于 daysQuery) ---
+访问者 -> 控制层: 请求个人健康趋势分析
+activate 控制层
+    控制层 -> 业务层: 执行数据统计逻辑
+    activate 业务层
+        业务层 -> 持久层: 检索指定用户健康记录
+        activate 持久层
+            持久层 -> 数据库: 执行条件查询语句
+            activate 数据库
+            数据库 --> 持久层: 返回用户健康记录
+            deactivate 数据库
+            持久层 --> 业务层: 传递原始数据列表
+        deactivate 持久层
+
+        业务层 -> 工具类: 执行日期聚合与趋势计算
+        activate 工具类
+        工具类 --> 业务层: 返回聚合后的图表数据
+        deactivate 工具类
+    业务层 --> 控制层: 返回个人分析结果
+    deactivate 业务层
+控制层 --> 访问者: 展现个人健康看板与趋势图
+deactivate 控制层
+
+' --- 2. 管理员全局统计分析流程 (存量/活跃/健康分析) ---
+访问者 -> 控制层: 请求全局统计报表
+activate 控制层
+    控制层 -> 业务层: 处理全量数据汇总逻辑
+    activate 业务层
+        业务层 -> 持久层: 检索全站基础数据与活跃记录
+        activate 持久层
+            持久层 -> 数据库: 执行多维度聚合查询
+            activate 数据库
+            数据库 --> 持久层: 返回汇总结果集
+            deactivate 数据库
+            持久层 --> 业务层: 传递全量统计数据
+        deactivate 持久层
+
+        业务层 -> 业务层: 内部执行数据建模与分析
+
+    业务层 --> 控制层: 返回全局分析报告
+    deactivate 业务层
+控制层 --> 访问者: 展示全站统计看板 (存量/活跃/健康)
+deactivate 控制层
+
+@enduml

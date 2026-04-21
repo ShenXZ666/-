@@ -1,0 +1,100 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点全中文命名
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 热量打卡记录管理时序图
+
+' 定义参与者
+participant "用户/管理员" as 用户
+participant "接口控制层" as 控制层
+participant "核心业务层" as 业务层
+participant "通知业务层" as 通知层
+participant "数据持久层" as 持久层
+participant "数据库" as 数据库
+
+' ================= 业务流程 (总流程28步) =================
+
+' --- 1. 热量打卡与指标预警流程 ---
+用户 -> 控制层: 发起热量打卡请求
+activate 控制层
+    控制层 -> 业务层: 执行打卡业务逻辑
+    activate 业务层
+        业务层 -> 持久层: 核验指标阈值并保存记录
+        activate 持久层
+            持久层 -> 数据库: 查询配置标准并写入打卡实体
+            activate 数据库
+            数据库 --> 持久层: 返回执行结果
+            deactivate 数据库
+            持久层 --> 业务层: 传递处理反馈
+        deactivate 持久层
+
+        业务层 -> 通知层: 指标异常时触发预警推送
+        activate 通知层
+            通知层 -> 数据库: 存储指标异常通知消息
+            activate 数据库
+            数据库 --> 通知层: 确认存储成功
+            deactivate 数据库
+            通知层 --> 业务层: 结束通知流程
+        deactivate 通知层
+    业务层 --> 控制层: 反馈打卡业务完成
+    deactivate 业务层
+控制层 --> 用户: 提示打卡成功及健康建议
+deactivate 控制层
+
+' --- 2. 打卡历史查询与统计流程 ---
+用户 -> 控制层: 查询个人打卡历史或统计
+activate 控制层
+    控制层 -> 业务层: 执行数据检索与分析逻辑
+    activate 业务层
+        业务层 -> 持久层: 调用数据访问接口
+        activate 持久层
+            持久层 -> 数据库: 执行查询或周期统计SQL
+            activate 数据库
+            数据库 --> 持久层: 返回历史结果集
+            deactivate 数据库
+            持久层 --> 业务层: 传递数据列表
+        deactivate 持久层
+    业务层 --> 控制层: 返回聚合后的打卡数据
+    deactivate 业务层
+控制层 --> 用户: 展现打卡历史图表或列表
+deactivate 控制层
+
+' --- 3. 记录维护与后台监管流程 ---
+用户 -> 控制层: 修改或删除指定打卡记录
+activate 控制层
+    控制层 -> 业务层: 处理记录维护或监管请求
+    activate 业务层
+        业务层 -> 持久层: 执行数据库更新或批量清理
+        activate 持久层
+            持久层 -> 数据库: 执行具体持久化变更操作
+            activate 数据库
+            数据库 --> 持久层: 返回操作受影响行数
+            deactivate 数据库
+            持久层 --> 业务层: 传递操作处理反馈
+        deactivate 持久层
+    业务层 --> 控制层: 反馈管理操作成功
+    deactivate 业务层
+控制层 --> 用户: 提示记录更新或删除已生效
+deactivate 控制层
+
+@enduml

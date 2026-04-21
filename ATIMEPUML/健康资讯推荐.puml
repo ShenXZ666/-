@@ -1,0 +1,88 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点黑白化
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 健康资讯推荐时序图
+
+' 定义参与者
+participant "用户/管理员" as Client
+participant "Controller层" as Controller
+participant "业务逻辑Service" as Service
+participant "推荐算法工具" as Tools
+participant "数据访问Mapper" as Mapper
+participant "数据库" as DB
+
+' ================= 业务流程 (总步数控制在28步以内) =================
+
+' --- 1. 资讯查询与智能推荐流程 ---
+Client -> Controller: 发起资讯推荐或查询请求
+activate Controller
+    Controller -> Service: 执行推荐与检索业务
+    activate Service
+        Service -> Mapper: 检索资讯内容及历史评分
+        activate Mapper
+            Mapper -> DB: 查询资讯与评分记录
+            activate DB
+            DB --> Mapper: 返回原始业务数据
+            deactivate DB
+            Mapper --> Service: 传递数据列表
+        deactivate Mapper
+
+        Service -> Tools: 执行协同过滤与矩阵计算
+        activate Tools
+        Tools --> Service: 返回推荐项ID序列
+        deactivate Tools
+
+        Service -> Mapper: 获取推荐项详细内容
+        activate Mapper
+            Mapper -> DB: 执行批量内容检索
+            activate DB
+            DB --> Mapper: 返回资讯实体
+            deactivate DB
+            Mapper --> Service: 传递完整推荐列表
+        deactivate Mapper
+    Service --> Controller: 返回处理后的资讯结果集
+    deactivate Service
+Controller --> Client: 展现推荐资讯或查询结果
+deactivate Controller
+
+' --- 2. 资讯互动与内容管理流程 ---
+Client -> Controller: 发起互动请求 (收藏/发布/删除)
+activate Controller
+    Controller -> Service: 执行状态维护与持久化逻辑
+    activate Service
+        ' 总结：将收藏判定(operation)与管理(update/delete)合并
+        Service -> Mapper: 调用数据库核验及写入方法
+        activate Mapper
+            Mapper -> DB: 执行增删改查具体SQL操作
+            activate DB
+            DB --> Mapper: 返回操作执行状态
+            deactivate DB
+            Mapper --> Service: 传递业务处理反馈
+        deactivate Mapper
+    Service --> Controller: 反馈业务操作成功
+    deactivate Service
+Controller --> Client: 提示操作成功并刷新页面
+deactivate Controller
+
+@enduml

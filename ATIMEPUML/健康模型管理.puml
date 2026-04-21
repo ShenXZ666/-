@@ -1,0 +1,109 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点黑白化
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 健康模型管理时序图
+
+' 定义参与者
+participant "用户/管理员" as Client
+participant "Controller层" as Controller
+participant "健康模型Service" as Service
+participant "Excel工具类" as Tools
+participant "Mapper层" as Mapper
+participant "数据库" as DB
+
+' ================= 业务流程 =================
+
+' --- 1. 模型信息查询与模板导出 ---
+Client -> Controller: 请求查询列表或导出导入模板
+activate Controller
+    Controller -> Service: 执行查询或生成模板逻辑
+    activate Service
+        Service -> Mapper: 调用模型数据检索方法
+        activate Mapper
+            Mapper -> DB: 执行具体SQL查询
+            activate DB
+            DB --> Mapper: 返回模型配置结果集
+            deactivate DB
+            Mapper --> Service: 传递数据列表
+        deactivate Mapper
+
+        ' 总结：涵盖 EasyExcel 动态生成下拉列表及内存写出
+        opt 若为模板下载
+            Service -> Tools: 动态构建含下拉项的Excel流
+            activate Tools
+            Tools --> Service: 返回文件字节流
+            deactivate Tools
+        end
+    Service --> Controller: 返回模型数据或文件下载流
+    deactivate Service
+Controller --> Client: 展现模型列表或下载导入模板
+deactivate Controller
+
+' --- 2. 模型新增与表格文件导入 ---
+Client -> Controller: 提交模型配置 (单条保存/表格导入)
+activate Controller
+    Controller -> Service: 执行数据持久化逻辑
+    activate Service
+
+        ' 总结：涵盖文件读取、重复数据校验与实体转换
+        opt 若为表格导入
+            Service -> Tools: 解析上传文件
+            activate Tools
+            Tools --> Service: 返回合规模型实体列表
+            deactivate Tools
+        end
+
+        Service -> Mapper: 执行数据库写入操作
+        activate Mapper
+            Mapper -> DB: 执行数据插入或批量保存
+            activate DB
+            DB --> Mapper: 返回执行状态
+            deactivate DB
+            Mapper --> Service: 传递处理结果
+        deactivate Mapper
+
+    Service --> Controller: 反馈模型处理成功
+    deactivate Service
+Controller --> Client: 提示配置已生效或导入结果
+deactivate Controller
+
+' --- 3. 健康模型后台管理 (修改/参数配置/删除) ---
+Client -> Controller: 修改配置、调整参数或删除模型
+activate Controller
+    Controller -> Service: 执行后台维护业务
+    activate Service
+        Service -> Mapper: 调用数据更新或删除接口
+        activate Mapper
+            Mapper -> DB: 执行具体更新/物理删除
+            activate DB
+            DB --> Mapper: 返回受影响行数
+            deactivate DB
+            Mapper --> Service: 传递操作反馈
+        deactivate Mapper
+    Service --> Controller: 返回管理反馈结果
+    deactivate Service
+Controller --> Client: 展现更新后结果或操作提示
+deactivate Controller
+
+@enduml

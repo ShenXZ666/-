@@ -1,0 +1,99 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点全中文命名
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 社区交流与消息通知管理时序图
+
+' 定义参与者（完全中文化）
+participant "社区用户/管理员" as 用户
+participant "接口控制层" as 控制层
+participant "核心业务层" as 业务层
+participant "数据持久层" as 持久层
+participant "数据库" as 数据库
+
+' ================= 业务流程 (严格无英文) =================
+
+' --- 1. 社区互动流程 (发表评论与自动通知) ---
+用户 -> 控制层: 发表评论或执行点赞
+activate 控制层
+    控制层 -> 业务层: 处理互动业务逻辑
+    activate 业务层
+        业务层 -> 持久层: 校验账号状态与目标数据
+        activate 持久层
+            持久层 -> 数据库: 查询用户禁言状态或互动对象
+            activate 数据库
+            数据库 --> 持久层: 返回验证数据结果
+            deactivate 数据库
+            持久层 --> 业务层: 传递校验反馈
+        deactivate 持久层
+
+        业务层 -> 持久层: 存储记录并触发关联通知
+        activate 持久层
+            持久层 -> 数据库: 写入互动记录与消息数据
+            activate 数据库
+            数据库 --> 持久层: 返回操作执行状态
+            deactivate 数据库
+            持久层 --> 业务层: 传递处理反馈结果
+        deactivate 持久层
+    业务层 --> 控制层: 反馈互动操作成功
+    deactivate 业务层
+控制层 --> 用户: 展现最新评论或点赞提示
+deactivate 控制层
+
+' --- 2. 消息接收与管理流程 (查看与清理) ---
+用户 -> 控制层: 查看通知列表或清除未读
+activate 控制层
+    控制层 -> 业务层: 执行消息检索与状态维护
+    activate 业务层
+        业务层 -> 持久层: 调用数据访问接口
+        activate 持久层
+            持久层 -> 数据库: 检索通知列表或批量更新已读
+            activate 数据库
+            数据库 --> 持久层: 返回结果集或受影响行数
+            deactivate 数据库
+            持久层 --> 业务层: 传递数据执行结果
+        deactivate 持久层
+    业务层 --> 控制层: 返回处理后的消息数据
+    deactivate 业务层
+控制层 --> 用户: 展现通知内容或提示清理完成
+deactivate 控制层
+
+' --- 3. 社区内容管理流程 (系统推送与违规处理) ---
+用户 -> 控制层: 发布全站公告或删除违规内容
+activate 控制层
+    控制层 -> 业务层: 处理后台管理请求
+    activate 业务层
+        业务层 -> 持久层: 执行批量数据处理与清理
+        activate 持久层
+            持久层 -> 数据库: 批量写入系统消息或删除记录
+            activate 数据库
+            数据库 --> 持久层: 反馈持久化执行结果
+            deactivate 数据库
+            持久层 --> 业务层: 传递管理操作反馈
+        deactivate 持久层
+    业务层 --> 控制层: 返回管理操作反馈结果
+    deactivate 业务层
+控制层 --> 用户: 提示管理操作完成
+deactivate 控制层
+
+@enduml

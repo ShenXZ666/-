@@ -1,0 +1,95 @@
+@startuml
+' === 样式调整区 ===
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点全中文命名
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 后台用户管理功能时序图
+
+' 定义参与者（全中文定义）
+participant "管理员/用户" as 用户
+participant "接口控制层" as 控制层
+participant "核心业务层" as 业务层
+participant "外部服务工具" as 工具层
+participant "数据持久层" as 持久层
+participant "数据库" as 数据库
+
+' ================= 业务流程 (严格无英文) =================
+
+' --- 1. 用户档案查询流程 (列表与详情) ---
+用户 -> 控制层: 发起用户档案检索请求
+activate 控制层
+    控制层 -> 业务层: 执行数据检索逻辑
+    activate 业务层
+        业务层 -> 持久层: 调用数据查询接口
+        activate 持久层
+            持久层 -> 数据库: 执行用户信息检索语句
+            activate 数据库
+            数据库 --> 持久层: 返回用户实体结果
+            deactivate 数据库
+            持久层 --> 业务层: 传递原始数据记录
+        deactivate 持久层
+    业务层 --> 控制层: 返回聚合后的用户信息
+    deactivate 业务层
+控制层 --> 用户: 展现管理列表或档案详情
+deactivate 控制层
+
+' --- 2. 管理管控流程 (修改/改密/封号/禁言/删除) ---
+用户 -> 控制层: 提交信息变更或管控指令
+activate 控制层
+    控制层 -> 业务层: 执行用户状态维护业务
+    activate 业务层
+        业务层 -> 持久层: 调用数据更新或清理方法
+        activate 持久层
+            持久层 -> 数据库: 执行状态修改或物理删除
+            activate 数据库
+            数据库 --> 持久层: 返回受影响行数
+            deactivate 数据库
+            持久层 --> 业务层: 反馈操作执行状态
+        deactivate 持久层
+    业务层 --> 控制层: 反馈业务处理成功
+    deactivate 业务层
+控制层 --> 用户: 提示管理操作已生效
+deactivate 控制层
+
+' --- 3. 人脸特征录入流程 (外部服务交互) ---
+用户 -> 控制层: 上传照片并录入人脸
+activate 控制层
+    控制层 -> 业务层: 处理人脸特征采集业务
+    activate 业务层
+        业务层 -> 工具层: 交互云端平台处理特征数据
+        activate 工具层
+        工具层 --> 业务层: 返回云端录入结果反馈
+        deactivate 工具层
+        业务层 -> 持久层: 同步本地特征关联信息
+        activate 持久层
+            持久层 -> 数据库: 写入人脸库关联记录
+            activate 数据库
+            数据库 --> 持久层: 确认持久化成功
+            deactivate 数据库
+            持久层 --> 业务层: 传递更新成功反馈
+        deactivate 持久层
+    业务层 --> 控制层: 反馈录入业务处理完成
+    deactivate 业务层
+控制层 --> 用户: 提示人脸录入成功
+deactivate 控制层
+
+@enduml

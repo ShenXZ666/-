@@ -1,0 +1,105 @@
+@startuml
+' === 样式调整区 ===
+' 自动序号，最大控制在 28 以内
+autonumber 1 "0:"
+scale 0.9
+skinparam responseMessageBelowArrow false
+skinparam ParticipantPadding 10
+
+' 1. 强制黑白简约风格
+skinparam defaultFontStyle normal
+skinparam defaultFontColor black
+skinparam ArrowColor black
+skinparam LifeLineBorderColor black
+skinparam LifeLineBackgroundColor white
+
+' 2. 参与者节点黑白化
+skinparam participant {
+    BackgroundColor white
+    BorderColor black
+    FontColor black
+}
+
+' ==========================================
+' === interaction 外框包裹整体 ===
+' ==========================================
+mainframe interaction 个人健康档案管理时序图
+
+' 定义参与者
+participant "用户/管理员" as Client
+participant "Controller层" as Controller
+participant "综合Service层" as Service
+participant "工具类/云服务" as Tools
+participant "Mapper层" as Mapper
+participant "数据库" as DB
+
+' ================= 业务流程 (总流程控制在28步以内) =================
+
+' --- 1. 身份认证业务 (人脸录入与登录) ---
+Client -> Controller: 发起身份认证请求 (人脸/账号)
+activate Controller
+    Controller -> Service: 执行认证与鉴权逻辑
+    activate Service
+        Service -> Tools: 交互云端接口 (人脸比对/Token计算)
+        activate Tools
+        Tools --> Service: 返回识别结果与凭证
+        deactivate Tools
+        Service -> Mapper: 检索用户实体记录
+        activate Mapper
+            Mapper -> DB: 执行具体SQL查询
+            activate DB
+            DB --> Mapper: 返回用户数据
+            deactivate DB
+            Mapper --> Service: 传递用户信息
+        deactivate Mapper
+    Service --> Controller: 反馈认证成功及凭证
+    deactivate Service
+Controller --> Client: 返回登录成功响应
+deactivate Controller
+
+' --- 2. 档案维护与自动化预警 (导入/保存/消息) ---
+Client -> Controller: 提交健康记录数据 (Excel/手动)
+activate Controller
+    Controller -> Service: 执行档案持久化与预警判定
+    activate Service
+        Service -> Tools: 执行数据解析与格式化处理
+        activate Tools
+        Tools --> Service: 返回结构化业务数据
+        deactivate Tools
+        Service -> Mapper: 保存档案并核验预警阈值
+        activate Mapper
+            Mapper -> DB: 批量写入健康记录数据
+            activate DB
+            DB --> Mapper: 返回保存状态
+            deactivate DB
+            ' 总结处理逻辑：将dealMessage和sendMessage总结为一步通知写入
+            Mapper -> DB: 判定指标异常并写入预警消息
+            activate DB
+            DB --> Mapper: 确认消息推送成功
+            deactivate DB
+            Mapper --> Service: 传递整体处理结果
+        deactivate Mapper
+    Service --> Controller: 反馈档案处理完成
+    deactivate Service
+Controller --> Client: 返回操作成功提示 (含预警)
+deactivate Controller
+
+' --- 3. 系统管理业务 (查询/统计/删除) ---
+Client -> Controller: 发起管理操作 (查询/删除/统计)
+activate Controller
+    Controller -> Service: 处理档案管理请求
+    activate Service
+        Service -> Mapper: 执行数据库访问操作
+        activate Mapper
+            Mapper -> DB: 执行检索或批量清理SQL
+            activate DB
+            DB --> Mapper: 返回结果集或执行状态
+            deactivate DB
+            Mapper --> Service: 传递业务执行结果
+        deactivate Mapper
+    Service --> Controller: 反馈管理操作结果
+    deactivate Service
+Controller --> Client: 展现档案内容或操作反馈
+deactivate Controller
+
+@enduml
