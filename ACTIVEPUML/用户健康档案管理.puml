@@ -1,0 +1,43 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:上传健康记录文件;
+
+|系统|
+:解析并校验文件数据;
+
+' 加上空格防止文字压线
+if (数据是否有效?) then (  否  )
+    |用户|
+    :提示导入失败;
+    stop
+else (  是  )
+    ' 将下一步直接放入分支内，完美消除第一个红圈的双重合并箭头
+    |系统|
+    :提取有效健康记录;
+endif
+
+if (指标是否异常?) then (  是  )
+    :保存预警消息;
+else (  否  )
+endif
+
+|系统|
+:保存记录至数据库;
+
+|用户|
+:提示导入成功;
+stop
+
+@enduml

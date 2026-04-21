@@ -1,0 +1,45 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:上传健康模型表格;
+
+|系统|
+:读取并解析表格数据;
+
+' 第一层判断：拦截空数据，避免无意义执行
+if (数据是否有效且非空?) then (  否  )
+    |用户|
+    :提示文件内容为空;
+    stop
+else (  是  )
+    |系统|
+    :获取系统已有健康模型;
+    :校验并过滤示例及无效数据;
+    :比对并剔除已存在的重复模型;
+
+    ' 第二层判断：分支自然向左回落至用户泳道，绝对不交叉
+    if (是否存在全新的模型数据?) then (  否  )
+        |用户|
+        :提示无新数据导入;
+        stop
+    else (  是  )
+        |系统|
+        :格式化参数并批量保存至数据库;
+        |用户|
+        :提示导入成功及新增数量;
+        stop
+    endif
+endif
+
+@enduml

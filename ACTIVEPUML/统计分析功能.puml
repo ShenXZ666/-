@@ -1,0 +1,37 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:进入数据可视化面板选择统计周期;
+
+|系统|
+:解析请求参数并计算目标时间区间;
+:查询该时间区间内的历史健康记录;
+
+' 核心判断：利用处理步骤数量不同形成阶梯落差，完美避免终点拥挤与交叉
+if (查询到的历史健康记录是否为空?) then (  是  )
+    |用户|
+    :提示当前周期内暂无统计数据;
+    stop
+else (  否  )
+    |系统|
+    :提取各项健康指标及打卡记录时间;
+    :按日期维度聚合计算健康趋势分布;
+    ' 利用连续的系统处理动作向下推移，打破对称
+    :构建可视化图表渲染所需的数据结构;
+    |用户|
+    :展示个人健康趋势分析看板;
+    stop
+endif
+
+@enduml

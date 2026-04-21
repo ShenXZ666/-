@@ -1,0 +1,46 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:发起社区交流互动请求;
+
+|系统|
+:查询用户权限与禁言状态;
+
+' 第一层拦截：阻断异常状态，单线向下
+if (账号是否处于禁言状态?) then (  是  )
+    |用户|
+    :拦截请求并提示账号受限;
+    stop
+else (  否  )
+    |系统|
+    :持久化保存评论或点赞数据;
+endif
+
+' 第二层分流：利用节点数量差异制造落差，避免双箭头与交叉
+if (是否触发他人消息通知条件?) then (  否  )
+    |系统|
+    :更新页面互动状态数据;
+    |用户|
+    :提示社区互动操作成功;
+    stop
+else (  是  )
+    |系统|
+    :构建交互提醒推送消息;
+    :批量入库保存系统通知;
+    |用户|
+    :提示操作成功并完成消息派发;
+    stop
+endif
+
+@enduml

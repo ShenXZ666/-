@@ -1,0 +1,50 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|管理员|
+start
+:进入后台用户管理模块;
+:选择目标用户并提交操作指令;
+
+|系统|
+:接收并解析管理指令参数;
+
+' 第一层判断：拦截无效操作，单线向下
+if (指令参数是否合法有效?) then (  否  )
+    |管理员|
+    :提示参数错误或操作无效;
+    stop
+else (  是  )
+    |系统|
+    :查询并匹配目标用户数据记录;
+endif
+
+' 第二层分流：利用节点数量制造阶梯落差，彻底告别线条交叉与双箭头
+if (是否为删除类操作?) then (  否  )
+    |系统|
+    :提取修改内容或状态调整参数;
+    :更新用户基础信息及封禁状态;
+    ' 增加一个处理节点，拉长此路线，让终点自然向下错开
+    :同步刷新目标账号业务交互权限;
+    |管理员|
+    :提示用户信息管理成功;
+    stop
+else (  是  )
+    |系统|
+    :提取待删除目标用户标识集合;
+    :执行批量移除并清理底层记录;
+    |管理员|
+    :提示用户批量删除完成;
+    stop
+endif
+
+@enduml

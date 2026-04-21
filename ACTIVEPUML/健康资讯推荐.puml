@@ -1,0 +1,39 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:进入健康资讯推荐页面;
+
+|系统|
+:获取全部资讯与用户评分基础数据;
+:构建用户与资讯的多维评分矩阵;
+:执行基于用户的协同过滤推荐算法;
+
+' 核心判断：利用节点数量差异，制造上下错落感，清晰区分两个终点
+if (是否成功生成推荐列表?) then (  否  )
+    |系统|
+    :截取最新发布资讯作为兜底数据;
+    |用户|
+    :展示默认兜底推荐资讯;
+    stop
+else (  是  )
+    |系统|
+    :根据生成的推荐ID提取资讯详情;
+    ' 新增此节点：打破对称，将右侧终点自然向下推移
+    :整合并排序个性化推荐内容;
+    |用户|
+    :展示个性化推荐资讯;
+    stop
+endif
+
+@enduml

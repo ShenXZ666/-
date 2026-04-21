@@ -1,0 +1,47 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:提交健康档案数据;
+
+|系统|
+:解析提取有效档案记录;
+
+' 加上空格防止文字压线
+if (数据是否有效?) then (  否  )
+    |用户|
+    :提示解析失败;
+    stop
+else (  是  )
+    |系统|
+    :匹配健康模型进行分析;
+endif
+
+' 【核心修复】：调换代码中“否”和“是”的先后位置，业务逻辑不变。
+' 这样PlantUML排版引擎会将路线重新左右分配，完美避开交叉，解决结束节点压线的问题。
+if (指标是否超标异常?) then (  否  )
+    |系统|
+    :保存档案记录至数据库;
+    |用户|
+    :提示分析完成;
+    stop
+else (  是  )
+    |系统|
+    :生成健康预警消息;
+    :保存档案与预警至数据库;
+    |用户|
+    :提示分析完成并注意预警;
+    stop
+endif
+
+@enduml

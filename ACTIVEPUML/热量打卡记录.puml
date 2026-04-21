@@ -1,0 +1,48 @@
+@startuml
+' 强制去除阴影，纯白背景，黑色边框与单箭头
+skinparam shadowing false
+skinparam defaultTextAlignment center
+skinparam ArrowColor black
+skinparam ActivityBorderColor black
+skinparam ActivityBackgroundColor white
+skinparam ActivityDiamondBackgroundColor white
+skinparam ActivityDiamondBorderColor black
+skinparam SwimlaneBorderColor black
+skinparam SwimlaneTitleBackgroundColor white
+
+|用户|
+start
+:上传热量打卡记录文件;
+
+|系统|
+:读取并解析打卡数据;
+
+' 第一层判断：阻断无效数据，单线向下无交叉
+if (数据是否有效且非空?) then (  否  )
+    |用户|
+    :提示文件内容为空;
+    stop
+else (  是  )
+    |系统|
+    :匹配系统健康模型配置;
+    :提取热量指标正常阈值;
+endif
+
+' 第二层判断：利用节点数量差异制造落差，清晰区分两个终点
+if (打卡热量指标是否超标?) then (  否  )
+    |系统|
+    :持久化保存热量打卡记录;
+    |用户|
+    :提示打卡记录导入成功;
+    stop
+else (  是  )
+    |系统|
+    :生成热量超标预警通知;
+    ' 多出一个节点，打破对称，终点自然向下推移
+    :批量保存打卡记录与预警消息;
+    |用户|
+    :提示导入成功并注意热量超标;
+    stop
+endif
+
+@enduml
